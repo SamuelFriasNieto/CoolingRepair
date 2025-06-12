@@ -1,3 +1,5 @@
+"use client";
+
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import {
@@ -9,11 +11,27 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { SolicitudSchema, Solicitud } from "@/core/solicitud/entities/Solicitud";
 
-export function LoginForm({
+
+export function SolicitudForm({
   className,
   ...props
 }: React.ComponentProps<"div">) {
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<Solicitud>({
+    resolver: zodResolver(SolicitudSchema),
+  });
+
+  const onSubmit = (data: Solicitud) => {
+    console.log("Datos validados:", data);
+  };
+
   return (
     <div className={cn("flex flex-col gap-6", className)} {...props}>
       <Card>
@@ -24,70 +42,74 @@ export function LoginForm({
           <CardDescription>Rellena aquí tus datos de cliente</CardDescription>
         </CardHeader>
         <CardContent>
-          <form>
+          <form onSubmit={handleSubmit(onSubmit)}>
             <div className="grid gap-6">
               <div className="flex gap-3">
-                <div className="grid gap-3">
-                  <div className="flex items-center">
-                    <Label htmlFor="nombre">Nombre</Label>
-                  </div>
-                  <Input id="nombre" type="text" required />
+                <div className="grid gap-1 w-full">
+                  <Label htmlFor="nombre">Nombre</Label>
+                  <Input id="nombre" {...register("nombre")} />
+                  {errors.nombre && (
+                    <p className="text-sm text-red-500">{errors.nombre.message}</p>
+                  )}
                 </div>
-                <div className="grid gap-3">
-                  <div className="flex items-center">
-                    <Label htmlFor="apellido">Apellidos</Label>
-                  </div>
-                  <Input id="apellido" type="text" required />
+                <div className="grid gap-1 w-full">
+                  <Label htmlFor="apellido">Apellidos</Label>
+                  <Input id="apellido" {...register("apellido")} />
+                  {errors.apellido && (
+                    <p className="text-sm text-red-500">{errors.apellido.message}</p>
+                  )}
                 </div>
               </div>
-              <div className="grid gap-3">
-                <div className="flex items-center">
-                  <Label htmlFor="nif/cif">N.I.F/C.I.F</Label>
-                </div>
-                <Input id="nif/cif" type="text" required />
+              <div className="grid gap-1">
+                <Label htmlFor="nif">N.I.F/C.I.F</Label>
+                <Input id="nif" {...register("nif")} />
+                {errors.nif && (
+                  <p className="text-sm text-red-500">{errors.nif.message}</p>
+                )}
               </div>
-              <div className="grid gap-3">
-                <div className="flex items-center">
-                  <Label htmlFor="domicilio">Domicilio</Label>
-                </div>
-                <Input
-                  placeholder="SALVADOR GUINOT 8, P 6"
-                  id="domicilio"
-                  type="text"
-                  required
-                />
+              <div className="grid gap-1">
+                <Label htmlFor="domicilio">Domicilio</Label>
+                <Input id="domicilio" {...register("domicilio")} />
+                {errors.domicilio && (
+                  <p className="text-sm text-red-500">{errors.domicilio.message}</p>
+                )}
               </div>
               <div className="flex gap-3">
-                <div className="grid gap-3">
-                  <div className="flex items-center">
-                    <Label htmlFor="cpostal">C. Postal</Label>
-                  </div>
-                  <Input id="cpostal" type="text" required />
+                <div className="grid gap-1 w-full">
+                  <Label htmlFor="cpostal">C. Postal</Label>
+                  <Input id="cpostal" {...register("cpostal")} />
+                  {errors.cpostal && (
+                    <p className="text-sm text-red-500">{errors.cpostal.message}</p>
+                  )}
                 </div>
-                <div className="grid gap-3">
-                  <div className="flex items-center">
-                    <Label htmlFor="localidad">Localidad</Label>
-                  </div>
-                  <Input id="localidad" type="text" required />
+                <div className="grid gap-1 w-full">
+                  <Label htmlFor="localidad">Localidad</Label>
+                  <Input id="localidad" {...register("localidad")} />
+                  {errors.localidad && (
+                    <p className="text-sm text-red-500">{errors.localidad.message}</p>
+                  )}
                 </div>
-                <div className="grid gap-3">
-                  <div className="flex items-center">
-                    <Label htmlFor="provincia">Provincia</Label>
-                  </div>
-                  <Input id="provincia" type="text" required />
+                <div className="grid gap-1 w-full">
+                  <Label htmlFor="provincia">Provincia</Label>
+                  <Input id="provincia" {...register("provincia")} />
+                  {errors.provincia && (
+                    <p className="text-sm text-red-500">{errors.provincia.message}</p>
+                  )}
                 </div>
               </div>
-              <div className="grid gap-3">
-                <div className="flex items-center">
-                  <Label htmlFor="telefono">Teléfono</Label>
-                </div>
-                <Input id="telefono" type="text" required />
+              <div className="grid gap-1">
+                <Label htmlFor="telefono">Teléfono</Label>
+                <Input id="telefono" {...register("telefono")} />
+                {errors.telefono && (
+                  <p className="text-sm text-red-500">{errors.telefono.message}</p>
+                )}
               </div>
-              <div className="grid gap-3">
-                <div className="flex items-center">
-                  <Label htmlFor="email">E-Mail</Label>
-                </div>
-                <Input id="email" type="email" required />
+              <div className="grid gap-1">
+                <Label htmlFor="email">E-Mail</Label>
+                <Input id="email" type="email" {...register("email")} />
+                {errors.email && (
+                  <p className="text-sm text-red-500">{errors.email.message}</p>
+                )}
               </div>
 
               <Button type="submit" className="w-full">
