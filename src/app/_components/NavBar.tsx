@@ -8,6 +8,7 @@ const NavBar = () => {
         <div className="flex justify-between items-center py-4">
           <div className="flex items-center">
             <div className="text-2xl font-bold">
+              <h1 className="sr-only">CoolingRepair</h1>
               <Image
                 src="/logo.png"
                 alt="Logo"

@@ -2,7 +2,7 @@ import { Button } from "@/components/ui/button";
 import React from "react";
 import Image from "next/image";
 
-const SolicitarPresupuestoMain = () => {
+const MainPageBudgetRequest = () => {
   return (
     <div className="pb-10 ">
       <div className="px-4">
@@ -49,4 +49,4 @@ const SolicitarPresupuestoMain = () => {
   );
 };
 
-export default SolicitarPresupuestoMain;
+export default MainPageBudgetRequest;
