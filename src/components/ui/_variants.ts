@@ -4,7 +4,7 @@ export const colorVariants = {
   default:
     "text-foreground bg-background hover:bg-primary/95 hover:text-primary-foreground",
   primary:
-    "border-primary bg-secondary-blue text-on-secondary-blue hover:bg-primary/70 hover:text-primary-foreground",
+    "font-bold bg-primary hover:bg-surface text-white hover:text-primary border cursor-pointer border-primary ",
   half: "border-primary bg-primary/20 text-primary hover:bg-primary hover:text-primary-foreground",
   outline:
     "border-primary/30 bg-background hover:bg-primary/90 hover:text-primary-foreground",

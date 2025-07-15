@@ -3,6 +3,7 @@ import NavBar from "./_components/NavBar";
 import SolicitarPresupuestoMain from "./_components/SolicitarPresupuestoMain";
 import MainContainer from "@/components/MainContainer";
 import MainServices from "./_components/MainServices";
+import ComfortSection from "./_components/ComfortSection";
 
 export default function Home() {
   return (
@@ -12,6 +13,9 @@ export default function Home() {
         <SolicitarPresupuestoMain />
       </MainContainer>
       <MainServices />
+      <MainContainer>
+        <ComfortSection />
+      </MainContainer>
     </div>
   );
 }

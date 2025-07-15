@@ -9,7 +9,7 @@ interface ServiceCardProps {
 
 const ServiceCard = ({text, img}: ServiceCardProps) => {
   return (
-    <Card className="py-0 rounded-3xl hover:scale-108 transition duration-300 ease-in-out">
+    <Card className="py-0 rounded-3xl hover:scale-105 transition duration-300 ease-in-out">
       <CardContent className="p-0 h-full relative">
         <Image
           src={img}
