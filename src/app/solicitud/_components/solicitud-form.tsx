@@ -2,6 +2,7 @@
 
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
+import { useServerAction } from "zsa-react";
 import {
   Card,
   CardContent,
@@ -13,9 +14,12 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { SolicitudSchema, Solicitud } from "@/core/solicitud/entities/Solicitud";
-
-
+import {
+  SolicitudSchema,
+  Solicitud,
+} from "@/core/solicitud/entities/Solicitud";
+import { createSolicitudAction } from "@/app/solicitud/actions";
+import { toast } from "sonner";
 export function SolicitudForm({
   className,
   ...props
@@ -28,9 +32,24 @@ export function SolicitudForm({
     resolver: zodResolver(SolicitudSchema),
   });
 
-  const onSubmit = (data: Solicitud) => {
-    console.log("Datos validados:", data);
+  const {isPending, execute, data} = useServerAction(createSolicitudAction, {
+    onError: ({err}) => {
+      toast.error( err.message);
+    },
+    onSuccess:({data}) => {
+      toast.success(data.message);
+      console.log("Solicitud enviada:", data);
+    }
+  });
+
+  const onSubmit = (solicitud: Solicitud) => {
+    console.log("Datos validados:", solicitud);
+    execute({
+      solicitud
+    })
   };
+
+
 
   return (
     <div className={cn("flex flex-col gap-6", className)} {...props}>
@@ -49,14 +68,18 @@ export function SolicitudForm({
                   <Label htmlFor="nombre">Nombre</Label>
                   <Input id="nombre" {...register("nombre")} />
                   {errors.nombre && (
-                    <p className="text-sm text-red-500">{errors.nombre.message}</p>
+                    <p className="text-sm text-red-500">
+                      {errors.nombre.message}
+                    </p>
                   )}
                 </div>
                 <div className="grid gap-1 w-full">
                   <Label htmlFor="apellido">Apellidos</Label>
                   <Input id="apellido" {...register("apellido")} />
                   {errors.apellido && (
-                    <p className="text-sm text-red-500">{errors.apellido.message}</p>
+                    <p className="text-sm text-red-500">
+                      {errors.apellido.message}
+                    </p>
                   )}
                 </div>
               </div>
@@ -71,7 +94,9 @@ export function SolicitudForm({
                 <Label htmlFor="domicilio">Domicilio</Label>
                 <Input id="domicilio" {...register("domicilio")} />
                 {errors.domicilio && (
-                  <p className="text-sm text-red-500">{errors.domicilio.message}</p>
+                  <p className="text-sm text-red-500">
+                    {errors.domicilio.message}
+                  </p>
                 )}
               </div>
               <div className="flex gap-3">
@@ -79,40 +104,52 @@ export function SolicitudForm({
                   <Label htmlFor="cpostal">C. Postal</Label>
                   <Input id="cpostal" {...register("cpostal")} />
                   {errors.cpostal && (
-                    <p className="text-sm text-red-500">{errors.cpostal.message}</p>
+                    <p className="text-sm text-red-500">
+                      {errors.cpostal.message}
+                    </p>
                   )}
                 </div>
                 <div className="grid gap-1 w-full">
                   <Label htmlFor="localidad">Localidad</Label>
                   <Input id="localidad" {...register("localidad")} />
                   {errors.localidad && (
-                    <p className="text-sm text-red-500">{errors.localidad.message}</p>
+                    <p className="text-sm text-red-500">
+                      {errors.localidad.message}
+                    </p>
                   )}
                 </div>
                 <div className="grid gap-1 w-full">
                   <Label htmlFor="provincia">Provincia</Label>
                   <Input id="provincia" {...register("provincia")} />
                   {errors.provincia && (
-                    <p className="text-sm text-red-500">{errors.provincia.message}</p>
+                    <p className="text-sm text-red-500">
+                      {errors.provincia.message}
+                    </p>
                   )}
                 </div>
               </div>
-              <div className="grid gap-1">
-                <Label htmlFor="telefono">Teléfono</Label>
-                <Input id="telefono" {...register("telefono")} />
-                {errors.telefono && (
-                  <p className="text-sm text-red-500">{errors.telefono.message}</p>
-                )}
-              </div>
-              <div className="grid gap-1">
-                <Label htmlFor="email">E-Mail</Label>
-                <Input id="email" type="email" {...register("email")} />
-                {errors.email && (
-                  <p className="text-sm text-red-500">{errors.email.message}</p>
-                )}
+              <div className="sm:flex block gap-3">
+                <div className="grid mb-3 sm:mb-0 gap-1 w-full">
+                  <Label htmlFor="telefono">Teléfono</Label>
+                  <Input id="telefono" {...register("telefono")} />
+                  {errors.telefono && (
+                    <p className="text-sm text-red-500">
+                      {errors.telefono.message}
+                    </p>
+                  )}
+                </div>
+                <div className="grid gap-1 w-full">
+                  <Label htmlFor="email">E-Mail</Label>
+                  <Input id="email" type="email" {...register("email")} />
+                  {errors.email && (
+                    <p className="text-sm text-red-500">
+                      {errors.email.message}
+                    </p>
+                  )}
+                </div>
               </div>
 
-              <Button type="submit" className="w-full">
+              <Button  spinnerClassName="fill-white" isPending={isPending} variant={"primary"} disabled={isPending} type="submit" className="w-full ">
                 Enviar
               </Button>
             </div>

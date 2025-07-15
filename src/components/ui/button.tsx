@@ -1,59 +1,120 @@
-import * as React from "react"
-import { Slot } from "@radix-ui/react-slot"
-import { cva, type VariantProps } from "class-variance-authority"
+"use client";
 
-import { cn } from "@/lib/utils"
+import * as React from "react";
+import { Slot } from "@radix-ui/react-slot";
+import { cva, type VariantProps } from "class-variance-authority";
+
+import { cn } from "@/lib/utils";
+import Spinner from "../spinner";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "./tooltip";
+import { colorVariants } from "./_variants";
 
 const buttonVariants = cva(
-  "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive",
+  "inline-flex gap-1 items-center justify-center whitespace-nowrap text-sm font-medium ring-offset-background transition-all focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 backdrop-blur-sm active:scale-95 disabled:pointer-events-none disabled:cursor-auto " +
+    "disabled:bg-background/30 disabled:text-foreground/30 disabled:border-foreground/30 disabled:shadow-none",
   {
     variants: {
-      variant: {
-        default:
-          "bg-primary text-primary-foreground shadow-xs hover:bg-primary/90",
-        destructive:
-          "bg-destructive text-white shadow-xs hover:bg-destructive/90 focus-visible:ring-destructive/20 dark:focus-visible:ring-destructive/40 dark:bg-destructive/60",
-        outline:
-          "border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50",
-        secondary:
-          "bg-secondary text-secondary-foreground shadow-xs hover:bg-secondary/80",
-        ghost:
-          "hover:bg-accent hover:text-accent-foreground dark:hover:bg-accent/50",
-        link: "text-primary underline-offset-4 hover:underline",
-      },
+      variant: colorVariants,
       size: {
-        default: "h-9 px-4 py-2 has-[>svg]:px-3",
-        sm: "h-8 rounded-md gap-1.5 px-3 has-[>svg]:px-2.5",
-        lg: "h-10 rounded-md px-6 has-[>svg]:px-4",
-        icon: "size-9",
+        sm: "px-2 py-1 text-xs [&_svg]:size-4 [&_svg]:shrink-0",
+        md: "px-2 py-1 [&_svg]:size-5 [&_svg]:shrink-0",
+        lg: "px-3 py-2 text-base",
+        icon: "p-1 w-fit h-fit",
+      },
+      shadow: {
+        none: "shadow-none",
+        sm: "shadow-sm",
+        md: "shadow-md",
+        lg: "shadow-lg",
+      },
+      border: {
+        0: "border-0",
+        1: "border",
+        2: "border-2",
+        3: "border-3",
+        4: "border-4",
+      },
+      rounded: {
+        none: "rounded-none",
+        full: "rounded-full",
+        lg: "rounded-lg",
+        md: "rounded-md",
+        sm: "rounded-sm",
+        xs: "rounded-xs",
       },
     },
     defaultVariants: {
       variant: "default",
-      size: "default",
+      size: "md",
+      border: 1,
+      rounded: "md",
+      shadow: "none",
     },
-  }
-)
+  },
+);
 
-function Button({
-  className,
-  variant,
-  size,
-  asChild = false,
-  ...props
-}: React.ComponentProps<"button"> &
-  VariantProps<typeof buttonVariants> & {
-    asChild?: boolean
-  }) {
-  const Comp = asChild ? Slot : "button"
-
-  return (
-    <Comp
-      data-slot="button"
-      className={cn(buttonVariants({ variant, size, className }))}
-      {...props}
-    />
-  )
+export interface ButtonProps
+  extends React.ButtonHTMLAttributes<HTMLButtonElement>,
+    VariantProps<typeof buttonVariants> {
+  asChild?: boolean;
+  isPending?: boolean;
+  spinnerClassName?: string;
+  tooltip?: string;
 }
 
-export { Button, buttonVariants }
+const Button = ({
+  children,
+  tooltip,
+  isPending,
+  className,
+  spinnerClassName,
+  variant,
+  size,
+  border,
+  rounded,
+  shadow,
+  asChild = false,
+  ...props
+}: ButtonProps) => {
+  // const Comp = asChild ? Slot : "button";
+  const TempButton = asChild ? (
+    <Slot
+      data-slot="button"
+      className={cn(
+        buttonVariants({ shadow, variant, size, border, rounded, className }),
+      )}
+      data-pending={isPending}
+      {...props}
+    >
+      {children}
+    </Slot>
+  ) : (
+    <button
+      data-slot="button"
+      className={cn(
+        buttonVariants({ shadow, variant, size, border, rounded, className }),
+      )}
+      data-pending={isPending}
+      {...props}
+    >
+      {children}
+      {isPending && <Spinner className={cn("size-4", spinnerClassName)} />}
+    </button>
+  );
+
+  return tooltip ? (
+    <Tooltip delayDuration={100}>
+      <TooltipTrigger asChild>{TempButton}</TooltipTrigger>
+      <TooltipContent>{tooltip}</TooltipContent>
+    </Tooltip>
+  ) : (
+    TempButton
+  );
+};
+
+export { Button, buttonVariants };

@@ -1,6 +1,9 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
-import "./globals.css";
+import { Geist, Geist_Mono, Montserrat } from "next/font/google";
+import "./main.css";
+import { Toaster, toast } from "sonner";
+import SessionWrapper from "@/components/sessionWrapper";
+import { HeaderContactData } from "./_components/HeaderContactData";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -9,6 +12,11 @@ const geistSans = Geist({
 
 const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
+  subsets: ["latin"],
+});
+
+const montserrat = Montserrat({
+  variable: "--font-montserrat",
   subsets: ["latin"],
 });
 
@@ -23,12 +31,16 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
-        {children}
-      </body>
-    </html>
+    <SessionWrapper>
+      <html lang="en">
+        <body
+          className={`${montserrat.variable} bg-surface text-surface  antialiased`}
+        >
+          <Toaster richColors />
+          <HeaderContactData/>
+          {children}
+        </body>
+      </html>
+    </SessionWrapper>
   );
 }

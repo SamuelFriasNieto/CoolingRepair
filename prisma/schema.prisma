@@ -6,7 +6,6 @@
 
 generator client {
   provider = "prisma-client-js"
-  output   = "../src/generated/prisma"
 }
 
 datasource db {
@@ -17,7 +16,7 @@ datasource db {
 model Solicitud {
   id          String   @id @default(cuid())
   nombre      String
-  apellidos   String
+  apellido   String
   email       String   @unique
   nif       String   @unique
   domicilio   String
