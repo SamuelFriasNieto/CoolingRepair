@@ -46,6 +46,7 @@
   --radius-xl: calc(var(--radius) + 4px);
   --color-primary-red: var(--primary-red);
   --color-secondary-blue: var(--secondary-blue);
+  --color-secondary-container: var(--secondary-container);
   --color-on-secondary-blue: var(--on-secondary-blue);
   --color-on-secondary-container: var(--on-secondary-container);
   --color-surface: var(--surface);
